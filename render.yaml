@@ -1,0 +1,27 @@
+databases:
+  - name: songpyeon-db
+    plan: free
+    databaseName: songpyeon
+    user: songpyeon
+
+services:
+  - type: web
+    name: songpyeon-event
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: songpyeon-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: RECEIPT_SECRET
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.13.5

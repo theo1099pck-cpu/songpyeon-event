@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+  <div class="moon">{% if is_gold %}🌕{% else %}🥟{% endif %}</div>
+  <div class="brand">빠른티비 추석 이벤트</div>
+  <h1>송편 뽑기 결과</h1>
+</div>
+
+<div class="card result">
+  <div style="font-size:20px">{{nickname}} 님의 {{pick_number}}번 송편</div>
+  <div style="font-size:66px;margin:14px">{% if is_gold %}✨🥟✨{% else %}🥟{% endif %}</div>
+  <div style="font-size:20px">{{reward_name}}</div>
+  <div class="reward">{{"{:,}".format(reward_points)}}P 당첨!</div>
+</div>
+
+<div class="card">
+  <b>결과 확인번호</b>
+  <div style="font-size:25px;letter-spacing:3px;color:var(--gold);margin:10px 0">{{receipt}}</div>
+  <div class="small">이 확인번호와 결과는 운영자 관리자 페이지에도 동일하게 저장됩니다.</div>
+</div>
+{% endblock %}

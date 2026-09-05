@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="hero">
+  <div class="moon">🌕</div>
+  <div class="brand">빠른티비 추석 이벤트</div>
+  <h1>한가위 행운의 송편 뽑기</h1>
+  <p class="sub">인증 후 받은 1회용 참여코드로 행운의 송편을 골라보세요.</p>
+</div>
+
+<form method="post" action="{{url_for('draw')}}" id="drawForm">
+  <div class="card">
+    <label>회원 닉네임 / ID</label>
+    <input name="nickname" maxlength="80" required autocomplete="off" placeholder="예: 빠른회원123">
+  </div>
+
+  <div class="card">
+    <label>1회용 참여코드</label>
+    <input name="code" maxlength="32" required autocomplete="off" placeholder="예: A1B2C3D4" style="text-transform:uppercase">
+    <div class="small" style="margin-top:8px">운영진에게 인증 후 발급받은 코드를 입력해주세요.</div>
+  </div>
+
+  <div class="card">
+    <label>송편 하나를 선택하세요</label>
+    <input type="hidden" name="pick_number" id="pick_number">
+    <div class="grid">
+      {% for n in range(1,11) %}
+      <button type="button" class="song" data-n="{{n}}" onclick="selectSong(this)">
+        🥟<div class="song-num">{{n}}번</div>
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <button type="submit" style="font-size:17px;padding:14px 28px">🎁 송편 열어보기</button>
+    <p class="small" style="margin-bottom:0">추첨은 서버에서 자동으로 진행되며 당첨 결과와 확인번호가 즉시 기록됩니다.<br>한 번 사용한 참여코드는 다시 사용할 수 없습니다.</p>
+  </div>
+</form>
+
+<div class="card">
+  <b>공개 당첨 확률</b>
+  <div class="small" style="margin-top:8px">
+    {% for r in rewards %}
+      {{r.name}} {{ "{:,}".format(r.points) }}P — {{r.probability}}%{% if not loop.last %}<br>{% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+function selectSong(btn){
+  document.querySelectorAll('.song').forEach(x=>x.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('pick_number').value=btn.dataset.n;
+}
+document.getElementById('drawForm').addEventListener('submit',function(e){
+  if(!document.getElementById('pick_number').value){
+    e.preventDefault(); alert('송편 하나를 선택해주세요.');
+  }
+});
+</script>
+{% endblock %}

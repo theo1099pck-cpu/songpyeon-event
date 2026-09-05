@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="topbar">
+  <a class="btn secondary" href="{{url_for('index')}}" target="_blank">회원 화면</a>
+  <a class="btn secondary" href="{{url_for('export_csv')}}">CSV 다운로드</a>
+  <a class="btn secondary" href="{{url_for('admin_logout')}}">로그아웃</a>
+</div>
+<div class="hero"><div class="brand">ADMIN</div><h1>송편 이벤트 관리자</h1></div>
+
+<div class="stats">
+  <div class="stat"><span>전체 코드</span><b>{{total_codes}}</b></div>
+  <div class="stat"><span>사용 완료</span><b>{{used_codes}}</b></div>
+  <div class="stat"><span>총 당첨 포인트</span><b>{{"{:,}".format(total_points)}}P</b></div>
+</div>
+
+<div class="card">
+  <h3>1회용 참여코드 생성</h3>
+  <form method="post">
+    <input type="hidden" name="action" value="generate">
+    <div class="reward-row">
+      <div><label>메모(선택)</label><input name="memo" maxlength="120" placeholder="예: 텔레그램 TK123 / 9월 20일 인증"></div>
+      <div><label>생성 개수</label><input type="number" name="count" min="1" max="100" value="1"></div>
+      <div style="align-self:end"><button type="submit" style="width:100%">코드 생성</button></div>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <h3>당첨 보상 / 확률 설정</h3>
+  <p class="small">확률 합계는 반드시 100%여야 저장됩니다. 변경 후 새로 뽑는 회원부터 적용됩니다.</p>
+  <form method="post">
+    <input type="hidden" name="action" value="rewards">
+    {% for r in rewards %}
+    <div class="reward-row">
+      <input name="name_{{r.id}}" value="{{r.name}}" aria-label="보상명">
+      <input type="number" name="points_{{r.id}}" min="0" value="{{r.points}}" aria-label="포인트">
+      <input type="number" name="prob_{{r.id}}" min="0" max="100" value="{{r.probability}}" aria-label="확률">
+    </div>
+    {% endfor %}
+    <button type="submit">보상 / 확률 저장</button>
+  </form>
+</div>
+
+<div class="card table-wrap">
+  <h3>참여코드 / 결과 기록</h3>
+  <table>
+    <thead>
+      <tr><th>코드</th><th>상태</th><th>메모</th><th>회원</th><th>선택</th><th>당첨</th><th>사용시간(UTC)</th><th>확인번호</th><th>관리</th></tr>
+    </thead>
+    <tbody>
+      {% for c in codes %}
+      <tr>
+        <td><b>{{c.code}}</b></td>
+        <td>{% if c.used %}<span class="tag">사용완료</span>{% else %}<span class="tag">미사용</span>{% endif %}</td>
+        <td>{{c.memo or ""}}</td>
+        <td>{{c.nickname or ""}}</td>
+        <td>{% if c.pick_number %}{{c.pick_number}}번{% endif %}</td>
+        <td>{% if c.reward_points %}{{c.reward_name}} / {{"{:,}".format(c.reward_points)}}P{% endif %}</td>
+        <td>{{c.used_at.strftime("%Y-%m-%d %H:%M:%S") if c.used_at else ""}}</td>
+        <td>{{c.receipt or ""}}</td>
+        <td>
+          {% if c.used %}
+          <form method="post" action="{{url_for('reset_code',code=c.code)}}" onsubmit="return confirm('이 코드를 정말 초기화할까요?')"><button class="secondary" type="submit">초기화</button></form>
+          {% else %}
+          <form method="post" action="{{url_for('delete_code',code=c.code)}}" onsubmit="return confirm('미사용 코드를 삭제할까요?')"><button class="danger" type="submit">삭제</button></form>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="9">아직 생성된 코드가 없습니다.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#142346">
+  <title>{% block title %}빠른티비 한가위 이벤트{% endblock %}</title>
+  <style>
+    :root{--bg:#0c1730;--card:#142346;--line:#31476f;--text:#fff9e8;--muted:#bdc9df;--gold:#f4cf67;--green:#78a87e}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans KR",sans-serif;background:radial-gradient(circle at top,#253a67 0,#0c1730 42%,#081124 100%);color:var(--text);min-height:100vh}
+    .wrap{max-width:980px;margin:0 auto;padding:22px}
+    .hero{text-align:center;padding:30px 10px 22px}
+    .moon{font-size:74px;filter:drop-shadow(0 0 22px rgba(244,207,103,.35))}
+    h1{font-size:clamp(29px,5vw,48px);margin:4px 0 8px}
+    .brand{color:var(--gold);font-weight:900;letter-spacing:.06em}
+    .sub{color:var(--muted);margin:0}
+    .card{background:rgba(20,35,70,.94);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:17px;box-shadow:0 12px 36px rgba(0,0,0,.18)}
+    label{display:block;font-weight:800;margin-bottom:8px}
+    input{width:100%;padding:13px 14px;border-radius:11px;border:1px solid #4b648f;background:#0c1730;color:white;font-size:16px}
+    input:focus{outline:2px solid var(--gold);border-color:transparent}
+    .grid{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin-top:12px}
+    .song{background:linear-gradient(145deg,#eff0dc,#c8d7bd);color:#20322b;border:0;border-radius:50% 50% 46% 46%;aspect-ratio:1.05/1;padding:12px 8px;font-weight:900;cursor:pointer;box-shadow:inset 0 -7px 0 rgba(67,97,72,.12),0 8px 18px rgba(0,0,0,.18);font-size:32px;transition:.16s}
+    .song:hover{transform:translateY(-3px)}
+    .song.selected{outline:4px solid var(--gold);transform:translateY(-3px) scale(1.03)}
+    .song-num{font-size:14px;margin-top:4px}
+    button,.btn{border:0;border-radius:11px;background:var(--gold);color:#202020;padding:12px 16px;font-weight:900;cursor:pointer;text-decoration:none;display:inline-block}
+    .secondary{background:#2b3e67;color:#fff}
+    .danger{background:#763d43;color:#fff}
+    .flash{background:#7b373d;border:1px solid #a85861;padding:12px 14px;border-radius:12px;margin-bottom:14px}
+    .small{font-size:13px;color:var(--muted);line-height:1.55}
+    .result{text-align:center}
+    .reward{font-size:clamp(30px,6vw,48px);font-weight:950;color:var(--gold)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .stat{text-align:center;background:#0d1933;border-radius:14px;padding:15px}
+    .stat b{display:block;font-size:24px;color:var(--gold)}
+    .topbar{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+    table{width:100%;border-collapse:collapse;font-size:13px;min-width:880px}
+    th,td{padding:9px;border-bottom:1px solid #2f456e;text-align:left;vertical-align:middle}
+    th{color:#d9e2f1}
+    .table-wrap{overflow:auto}
+    .reward-row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px;margin-bottom:9px}
+    .tag{display:inline-block;border:1px solid #58709b;border-radius:999px;padding:3px 8px;font-size:12px;color:#d4def0}
+    @media(max-width:700px){.grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:1fr}.reward-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  {% with messages=get_flashed_messages() %}
+    {% for m in messages %}<div class="flash">{{m}}</div>{% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</div>
+</body>
+</html>
